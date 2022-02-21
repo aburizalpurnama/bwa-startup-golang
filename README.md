@@ -7,6 +7,7 @@
 - Optional : Suatu entity tidak diharuskan memiliki hubungan dengan entity lain
 - dapat menggunakan tools : https://erdplus.com/
 - Nama entity menggunakan plural dari kata benda
+
 		- User -<<create>>- Campaign (Mandatory <-> Optional) (One to Many)
 		- Campaign -<<has>>- Campain Image (Mandatory <-> Mandatory) (One to Many)
 		- User -<<has>>- transaction (Mandatory <-> Optional) (One to Many)
