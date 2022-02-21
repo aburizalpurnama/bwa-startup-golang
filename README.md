@@ -7,10 +7,10 @@
 - Optional : Suatu entity tidak diharuskan memiliki hubungan dengan entity lain
 - dapat menggunakan tools : https://erdplus.com/
 - Nama entity menggunakan plural dari kata benda
-		* User -<<create>>- Campaign (Mandatory <-> Optional) (One to Many)
-		* Campaign -<<has>>- Campain Image (Mandatory <-> Mandatory) (One to Many)
-		* User -<<has>>- transaction (Mandatory <-> Optional) (One to Many)
-		* Campaign -<<create>>- transaction (Mandatory <-> Optional) (One to Many)
+		- User -<<create>>- Campaign (Mandatory <-> Optional) (One to Many)
+		- Campaign -<<has>>- Campain Image (Mandatory <-> Mandatory) (One to Many)
+		- User -<<has>>- transaction (Mandatory <-> Optional) (One to Many)
+		- Campaign -<<create>>- transaction (Mandatory <-> Optional) (One to Many)
 		
 ### Instal postgreeSql ###
 
@@ -72,15 +72,15 @@ https://www.niagahoster.co.id/blog/cara-install-postgresql-di-ubuntu-18-04/?amp&
 		- updated_at : datetime
 		
 #### 4. Setup Backend API ###
-	- Menggunakan framework Gin (web framework)
-		> instalation : https://github.com/gin-gonic/gin#installation
+- Menggunakan framework Gin (web framework)
+	- instalation : https://github.com/gin-gonic/gin#installation
 		
-	- Menggunakan framework gorm (db access framework)
-		> instalation : https://gorm.io/docs/index.html#Install
-		- untuk instalasi driver, harus disesuaikan dengan DBMS yang digunakan
+- Menggunakan framework gorm (db access framework)
+	- instalation : https://gorm.io/docs/index.html#Install
+	- untuk instalasi driver, harus disesuaikan dengan DBMS yang digunakan
 		
-	- Membuat koneksi ke database
-		> instruction : https://gorm.io/docs/connecting_to_the_database.html
+- Membuat koneksi ke database
+	- instruction : https://gorm.io/docs/connecting_to_the_database.html
 
 
 	
