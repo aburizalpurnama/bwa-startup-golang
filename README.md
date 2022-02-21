@@ -88,6 +88,7 @@ https://www.niagahoster.co.id/blog/cara-install-postgresql-di-ubuntu-18-04/?amp&
 	Contoh : struct = user -> table = users
 	
 - Test Retrieving data from db data 
+
 		func TestRetrieveUserTableFromDB(t *testing.T) {
 
 		// get database connection
