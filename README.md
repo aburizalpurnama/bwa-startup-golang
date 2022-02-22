@@ -92,36 +92,41 @@ https://www.niagahoster.co.id/blog/cara-install-postgresql-di-ubuntu-18-04/?amp&
 
 		func TestRetrieveUserTableFromDB(t *testing.T) {
 
-		// get database connection
-		dsn := "host=localhost user=rizal password=3748 dbname=db_startup_bwa port=5432 sslmode=disable TimeZone=UTC"
-		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+			// get database connection
+			dsn := "host=localhost user=rizal password=3748 dbname=db_startup_bwa port=5432 sslmode=disable TimeZone=UTC"
+			db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-		// pastikan error == nil
-		assert.Nil(t, err)
+			// pastikan error == nil
+			assert.Nil(t, err)
 
-		// buat object array dari entity struct
-		var users []user.User
+			// buat object array dari entity struct
+			var users []user.User
 
-		// pastikan object kosong sebelum query ke db
-		assert.Equal(t, 0, len(users))
+			// pastikan object kosong sebelum query ke db
+			assert.Equal(t, 0, len(users))
 
-		// query ke db
-		if assert.NotNil(t, db) {
-			db.Find(&users)
+			// query ke db
+			if assert.NotNil(t, db) {
+				db.Find(&users)
+			}
+
+			// pastikan object user tidak nil lagi
+			assert.NotEqual(t, 0, &users)
+
+			for _, user := range users {
+				fmt.Println(user.Name)
+			}
+
 		}
 
-		// pastikan object user tidak nil lagi
-		assert.NotEqual(t, 0, &users)
-
-		for _, user := range users {
-			fmt.Println(user.Name)
-		}
-
-		}
-
-
+### 6. Create Handler (Controller) and JSON Output ###
+	- 
 
 ### Testing ###
+- Sebuah file golang akan secara otomatis terdeteksi sebagai Testing file jika ada _test.go
+
+	contoh : main_test.go
+	
 - Menggunakan library testify
 	- instalation : https://github.com/stretchr/testify#installation
 	- instruction : https://github.com/stretchr/testify#assert-package
