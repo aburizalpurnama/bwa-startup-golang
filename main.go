@@ -3,25 +3,15 @@ package main
 import (
 	"bwastartup/user"
 	"bwastartup/utils"
-	"net/http"
-
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	router := gin.Default()
-
-	router.GET("/users", UserHandler)
-
-	router.Run()
-}
-
-func UserHandler(c *gin.Context) {
 	db, _ := utils.GetDb()
 
-	var users []user.User
+	userRepository := user.NewRepository(db)
+	user := user.User{
+		Name: "Test",
+	}
 
-	db.Find(&users)
-
-	c.JSON(http.StatusOK, users)
+	userRepository.Save(user)
 }
