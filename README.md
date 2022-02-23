@@ -90,34 +90,34 @@ https://www.niagahoster.co.id/blog/cara-install-postgresql-di-ubuntu-18-04/?amp&
 	
 - Test Retrieving data from db data 
 
-	func TestRetrieveUserTableFromDB(t *testing.T) {
+		func TestRetrieveUserTableFromDB(t *testing.T) {
 
-		// get database connection
-		dsn := "host=localhost user=rizal password=3748 dbname=db_startup_bwa port=5432 sslmode=disable TimeZone=UTC"
-		db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+			// get database connection
+			dsn := "host=localhost user=rizal password=3748 dbname=db_startup_bwa port=5432 sslmode=disable TimeZone=UTC"
+			db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-		// pastikan error == nil
-		assert.Nil(t, err)
+			// pastikan error == nil
+			assert.Nil(t, err)
 
-		// buat object array dari entity struct
-		var users []user.User
+			// buat object array dari entity struct
+			var users []user.User
 
-		// pastikan object kosong sebelum query ke db
-		assert.Equal(t, 0, len(users))
+			// pastikan object kosong sebelum query ke db
+			assert.Equal(t, 0, len(users))
 
-		// query ke db
-		if assert.NotNil(t, db) {
-			db.Find(&users)
+			// query ke db
+			if assert.NotNil(t, db) {
+				db.Find(&users)
+			}
+
+			// pastikan object user tidak nil lagi
+			assert.NotEqual(t, 0, &users)
+
+			for _, user := range users {
+				fmt.Println(user.Name)
+			}
+
 		}
-
-		// pastikan object user tidak nil lagi
-		assert.NotEqual(t, 0, &users)
-
-		for _, user := range users {
-			fmt.Println(user.Name)
-		}
-
-	}
 
 ## 6. Implement Repository layer for Users
 
@@ -125,33 +125,33 @@ https://www.niagahoster.co.id/blog/cara-install-postgresql-di-ubuntu-18-04/?amp&
 
 - Create interface (contract) for repository struct
 
-	type Repository interface {
-		Save(user User) (User, error)
-	}
+		type Repository interface {
+			Save(user User) (User, error)
+		}
 
 - Create implement struct with db *gorm.DB field
 
-	type repository struct {
-		db *gorm.DB
-	}
+		type repository struct {
+			db *gorm.DB
+		}
 
 - Create method for instance the object
 
-	func NewRepository(db *gorm.DB) *repository {
-		return &repository{db}
-	}
+		func NewRepository(db *gorm.DB) *repository {
+			return &repository{db}
+		}
 
 - Create contract method
 
-	func (r *repository) Save(user User) (User, error) {
-		err := r.db.Create(&user).Error
+		func (r *repository) Save(user User) (User, error) {
+			err := r.db.Create(&user).Error
 
-		if err != nil {
-			return user, err
+			if err != nil {
+				return user, err
+			}
+
+			return user, nil
 		}
-
-		return user, nil
-	}
 
 ## 7. Implement Service layer for Users
 
@@ -159,50 +159,50 @@ https://www.niagahoster.co.id/blog/cara-install-postgresql-di-ubuntu-18-04/?amp&
 
 - Create interface (contract) for repository struct
 
-	type Service interface {
-		RegisterUser(input RegisterUserInput) (User, error)
-	}
+		type Service interface {
+			RegisterUser(input RegisterUserInput) (User, error)
+		}
 
 - Create implement struct with db *gorm.DB field
 
-	type service struct {
-		repository Repository
-	}
+		type service struct {
+			repository Repository
+		}
 
 - Create method for instance the object
 
-	func NewService(repository Repository) *service {
-		return &service{repository}
-	}
+		func NewService(repository Repository) *service {
+			return &service{repository}
+		}
 
 - Create contract method
 
-	Inserted password must be Hashed before passing to repository
+		// Inserted password must be Hashed before passing to repository
 
-	func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
-		user := User{}
-		user.Name = input.Name
-		user.Email = input.Email
-		user.Occupation = input.Occupation
+		func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
+			user := User{}
+			user.Name = input.Name
+			user.Email = input.Email
+			user.Occupation = input.Occupation
 
-		passHashed, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
+			passHashed, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
 
-		if err != nil {
-			return user, err
+			if err != nil {
+				return user, err
+			}
+
+			user.PasswordHash = string(passHashed)
+
+			user.Role = "user"
+
+			newUser, err := s.repository.Save(user)
+
+			if err != nil {
+				return newUser, err
+			}
+
+			return newUser, nil
 		}
-
-		user.PasswordHash = string(passHashed)
-
-		user.Role = "user"
-
-		newUser, err := s.repository.Save(user)
-
-		if err != nil {
-			return newUser, err
-		}
-
-		return newUser, nil
-	}
 
 
 ### 8. Create inputUser struct
@@ -211,12 +211,12 @@ Input struct digunakan untuk menampung data yang diinputkan oleh user atau untuk
 
 - Create input.go on user package
 
-	type RegisterUserInput struct {
-		Name       string
-		Occupation string
-		Email      string
-		Password   string
-	}
+		type RegisterUserInput struct {
+			Name       string
+			Occupation string
+			Email      string
+			Password   string
+		}
 
 ## 9. Implement handler a.k.a controller for User
 
@@ -226,67 +226,67 @@ handler digunakan untuk mapping API request
 
 - Create struct
 
-	type UserHandler struct {
-		userService user.Service
-	}
+		type UserHandler struct {
+			userService user.Service
+		}
 
 - Create method for instance the object
 
-	func NewUserHandler(userService user.Service) *UserHandler {
-		return &UserHandler{userService}
-	}
+		func NewUserHandler(userService user.Service) *UserHandler {
+			return &UserHandler{userService}
+		}
 
 - Create handler method
 
-	func (h *UserHandler) RegisterUser(c *gin.Context) {
-		// tangkap input dari user
-		// map input ke struct RegisterUserInput
-		// passing struct diatas kedalam service
+		func (h *UserHandler) RegisterUser(c *gin.Context) {
+			// tangkap input dari user
+			// map input ke struct RegisterUserInput
+			// passing struct diatas kedalam service
 
-		input := user.RegisterUserInput{}
+			input := user.RegisterUserInput{}
 
-		err := c.ShouldBindJSON(&input)
+			err := c.ShouldBindJSON(&input)
 
-		if err != nil {
-			log.Fatal(err.Error)
-			c.JSON(http.StatusBadRequest, input)
+			if err != nil {
+				log.Fatal(err.Error)
+				c.JSON(http.StatusBadRequest, input)
+			}
+
+			user, registErr := h.userService.RegisterUser(input)
+
+			if registErr != nil {
+				log.Fatal(registErr.Error)
+				c.JSON(http.StatusBadRequest, input)
+			}
+
+			c.JSON(http.StatusOK, user)
 		}
-
-		user, registErr := h.userService.RegisterUser(input)
-
-		if registErr != nil {
-			log.Fatal(registErr.Error)
-			c.JSON(http.StatusBadRequest, input)
-		}
-
-		c.JSON(http.StatusOK, user)
-	}
 ## Test in main.go
 
 Create each needed component and run the program
 
-	func main() {
-		db, err := utils.GetDb()
+		func main() {
+			db, err := utils.GetDb()
 
-		if err != nil {
-			log.Fatal(err.Error)
+			if err != nil {
+				log.Fatal(err.Error)
+			}
+
+			userRepository := user.NewRepository(db)
+
+			userService := user.NewService(userRepository)
+
+			userHandler := handler.NewUserHandler(userService)
+
+			router := gin.Default()
+
+			// API versioning
+			api := router.Group("/api/v1")
+
+			api.POST("/nasabah", userHandler.RegisterUser)
+
+			router.Run()
 		}
-
-		userRepository := user.NewRepository(db)
-
-		userService := user.NewService(userRepository)
-
-		userHandler := handler.NewUserHandler(userService)
-
-		router := gin.Default()
-
-		// API versioning
-		api := router.Group("/api/v1")
-
-		api.POST("/nasabah", userHandler.RegisterUser)
-
-		router.Run()
-	}
 
 ### Testing ###
 - Sebuah file golang akan secara otomatis terdeteksi sebagai Testing file jika ada _test.go
