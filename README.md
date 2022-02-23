@@ -121,27 +121,27 @@ https://www.niagahoster.co.id/blog/cara-install-postgresql-di-ubuntu-18-04/?amp&
 
 ## 6. Implement Repository layer for Users
 
-	- Create file repository.go on user package
+- Create file repository.go on user package
 
-	- Create interface (contract) for repository struct
+- Create interface (contract) for repository struct
 
 		type Repository interface {
 			Save(user User) (User, error)
 		}
 
-	- Create implement struct with db *gorm.DB field
+- Create implement struct with db *gorm.DB field
 
 		type repository struct {
 			db *gorm.DB
 		}
 
-	- Create method for instance the object
+- Create method for instance the object
 
 		func NewRepository(db *gorm.DB) *repository {
 			return &repository{db}
 		}
 
-	- Create contract method
+- Create contract method
 
 		func (r *repository) Save(user User) (User, error) {
 			err := r.db.Create(&user).Error
@@ -155,27 +155,27 @@ https://www.niagahoster.co.id/blog/cara-install-postgresql-di-ubuntu-18-04/?amp&
 
 ## 7. Implement Service layer for Users
 
-	- Create file service.go on user package
+- Create file service.go on user package
 
-	- Create interface (contract) for repository struct
+- Create interface (contract) for repository struct
 
 		type Service interface {
 			RegisterUser(input RegisterUserInput) (User, error)
 		}
 
-	- Create implement struct with db *gorm.DB field
+- Create implement struct with db *gorm.DB field
 
 		type service struct {
 			repository Repository
 		}
 
-	- Create method for instance the object
+- Create method for instance the object
 
 		func NewService(repository Repository) *service {
 			return &service{repository}
 		}
 
-	- Create contract method
+- Create contract method
 
 		Inserted password must be Hashed before passing to repository
 
@@ -207,9 +207,9 @@ https://www.niagahoster.co.id/blog/cara-install-postgresql-di-ubuntu-18-04/?amp&
 
 ### 8. Create input struct
 	
-	Input struct digunakan untuk menampung data yang diinputkan oleh user atau untuk mapping data dari sebuah request
+Input struct digunakan untuk menampung data yang diinputkan oleh user atau untuk mapping data dari sebuah request
 
-	- Create input.go on user package
+- Create input.go on user package
 
 		type RegisterUserInput struct {
 			Name       string
@@ -220,23 +220,23 @@ https://www.niagahoster.co.id/blog/cara-install-postgresql-di-ubuntu-18-04/?amp&
 
 ## 9. Implement handler a.k.a controller
 
-	handler digunakan untuk mapping API request
+handler digunakan untuk mapping API request
 
-	- Create user.go on handler package
+- Create user.go on handler package
 
-	- Create struct
+- Create struct
 
 		type UserHandler struct {
 			userService user.Service
 		}
 
-	- Create method for instance the object
+- Create method for instance the object
 
 		func NewUserHandler(userService user.Service) *UserHandler {
 			return &UserHandler{userService}
 		}
 
-	- Create handler method
+- Create handler method
 
 		func (h *UserHandler) RegisterUser(c *gin.Context) {
 			// tangkap input dari user
@@ -263,7 +263,7 @@ https://www.niagahoster.co.id/blog/cara-install-postgresql-di-ubuntu-18-04/?amp&
 		}
 ## Test in main.go
 
-	Create each component needed and run the program
+Create each needed component and run the program
 
 		func main() {
 			db, err := utils.GetDb()
@@ -287,7 +287,7 @@ https://www.niagahoster.co.id/blog/cara-install-postgresql-di-ubuntu-18-04/?amp&
 
 			router.Run()
 		}
-		
+
 ### Testing ###
 - Sebuah file golang akan secara otomatis terdeteksi sebagai Testing file jika ada _test.go
 
