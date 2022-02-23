@@ -1,23 +1,33 @@
 package main
 
 import (
+	"bwastartup/handler"
 	"bwastartup/user"
 	"bwastartup/utils"
+	"log"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	db, _ := utils.GetDb()
+	db, err := utils.GetDb()
+
+	if err != nil {
+		log.Fatal(err.Error)
+	}
 
 	userRepository := user.NewRepository(db)
 
 	userService := user.NewService(userRepository)
 
-	userInput := user.RegisterUserInput{
-		Name:       "Test",
-		Email:      "test@mail.com",
-		Occupation: "kang galer",
-		Password:   "test",
-	}
+	userHandler := handler.NewUserHandler(userService)
 
-	userService.RegisterUser(userInput)
+	router := gin.Default()
+
+	// API versioning
+	api := router.Group("/api/v1")
+
+	api.POST("/nasabah", userHandler.RegisterUser)
+
+	router.Run()
 }

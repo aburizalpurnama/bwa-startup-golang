@@ -14,7 +14,7 @@ type service struct {
 
 // create instance method
 func NewService(repository Repository) *service {
-	return &service{repository: repository}
+	return &service{repository}
 }
 
 // add method to struct
@@ -40,5 +40,5 @@ func (s *service) RegisterUser(input RegisterUserInput) (User, error) {
 		return newUser, err
 	}
 
-	return newUser, err
+	return newUser, nil
 }
