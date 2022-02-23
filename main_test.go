@@ -5,7 +5,6 @@ import (
 	"os/user"
 	"testing"
 
-	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -44,15 +43,5 @@ func TestRetrieveUserTableFromDB(t *testing.T) {
 	for _, user := range users {
 		fmt.Println(user.Name)
 	}
-
-}
-
-func TestGenerateJsonResponse(t *testing.T) {
-
-	router := gin.Default()
-
-	router.GET("/users", UserHandler)
-
-	router.Run()
 
 }
