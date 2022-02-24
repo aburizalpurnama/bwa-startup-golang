@@ -27,7 +27,7 @@ func main() {
 	// API versioning
 	api := router.Group("/api/v1")
 
-	api.POST("/nasabah", userHandler.RegisterUser)
+	api.POST("/user", userHandler.RegisterUser)
 
 	router.Run()
 }
